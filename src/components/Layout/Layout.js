@@ -1,12 +1,12 @@
-import { Fragment } from 'react';
+import Card from '../UI/Card';
 import MainHeader from './MainHeader';
 
 const Layout = (props) => {
   return (
-    <Fragment>
+    <Card>
       <MainHeader />
       <main>{props.children}</main>
-    </Fragment>
+    </Card>
   );
 };
 
