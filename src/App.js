@@ -3,7 +3,7 @@ import Cart from './components/Cart/Cart';
 import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import { useDispatch, useSelector } from 'react-redux';
-import { cartActions } from './store/cartSlice';
+import { sendCartData, fetchCartData } from './store/CartItem-Actions';
 import Notification from './components/UI/Notification'
 let isInitial = true
 
@@ -15,52 +15,19 @@ function App() {
   const dispatch = useDispatch()
 
 
+  // useEffect(() => {
+  //   dispatch(fetchCartData());
+  // }, [dispatch])
+
+
   useEffect(() => {
-    const sendCartData = async () => {
-      dispatch(
-        cartActions.showNotification({
-          status: "pending",
-          title: "Sending",
-          message: "Sending cart data!",
-        })
-      );
-
-      const response = await fetch(
-        "https://expensetracker-372e7-default-rtdb.firebaseio.com/cart.json",
-        {
-          method: "PUT",
-          body: JSON.stringify(cartItems),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("sending cart data failed");
-      }
-      dispatch(
-        cartActions.showNotification({
-          status: "success",
-          title: "Success!",
-          message: "Sent cart data successfully",
-        })
-      );
-    };
-
     if (isInitial) {
       isInitial = false;
       return
     }
-
-    sendCartData().catch((error) => {
-      dispatch(
-        cartActions.showNotification({
-          status: "error",
-          title: "Error",
-          message: "Sending cart data failed",
-        })
-      );
-    });
-
-
+    if(cartItems.changed){
+      dispatch(sendCartData(cartItems))
+    }
   }, [cartItems, dispatch]);
 
   return (
